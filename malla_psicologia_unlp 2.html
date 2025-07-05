@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Interactiva Psicología UNLP - Plan 2012</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #4B0082;
+    }
+    .anio {
+      margin-bottom: 30px;
+    }
+    .anio h2 {
+      color: #333;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+    }
+    .materia {
+      margin: 5px 0;
+      padding: 6px 10px;
+      border-radius: 5px;
+      background: #fff;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+    }
+    .materia.locked {
+      background: #eee;
+      color: #aaa;
+    }
+    .materia input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #4B0082;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Malla Interactiva - Psicología UNLP (Plan 2012)</h1>
+  <div id="contenedor"></div>
+  <button onclick="reiniciar()">Reiniciar progreso</button>
+
+  <script>
+    const materias = [
+      { id: 1, nombre: "Psicología I", anio: 1, correlativas: [] },
+      { id: 2, nombre: "Antropología Cultural y Social", anio: 1, correlativas: [] },
+      { id: 3, nombre: "Biología Humana", anio: 1, correlativas: [] },
+      { id: 4, nombre: "Lógica", anio: 1, correlativas: [] },
+      { id: 5, nombre: "Filosofía", anio: 1, correlativas: [] },
+      { id: 6, nombre: "Psicología II", anio: 2, correlativas: [1] },
+      { id: 7, nombre: "Teoría Psicoanalítica", anio: 2, correlativas: [1] },
+      { id: 8, nombre: "Sociología", anio: 2, correlativas: [2] },
+      { id: 9, nombre: "Estadística", anio: 2, correlativas: [] },
+      { id: 10, nombre: "Psicología Genética", anio: 2, correlativas: [1, 3] },
+      { id: 11, nombre: "Lingüística", anio: 2, correlativas: [4] },
+      { id: 12, nombre: "Epistemología y Metodología", anio: 3, correlativas: [1] },
+      { id: 13, nombre: "Fundamentos I", anio: 3, correlativas: [1] },
+      { id: 14, nombre: "Psicología Evolutiva I", anio: 3, correlativas: [1] },
+      { id: 15, nombre: "Psicología Evolutiva II", anio: 3, correlativas: [14] },
+      { id: 16, nombre: "Corrientes Actuales", anio: 3, correlativas: [6, 11] },
+      { id: 17, nombre: "Psicología Social", anio: 3, correlativas: [1, 2] },
+      { id: 18, nombre: "Neuroanatomía y Neurofisiología", anio: 3, correlativas: [3] },
+      { id: 19, nombre: "Psicopatología I", anio: 4, correlativas: [3, 7, 10] },
+      { id: 20, nombre: "Psicología Institucional", anio: 4, correlativas: [4, 6, 8, 9] },
+      { id: 21, nombre: "Psicología Experimental", anio: 4, correlativas: [4, 6, 7, 9] },
+      { id: 22, nombre: "Psicopatología II", anio: 4, correlativas: [14, 15, 18] },
+      { id: 23, nombre: "Fundamentos II", anio: 4, correlativas: [4, 6, 7, 9] },
+      { id: 24, nombre: "Psicodiagnóstico", anio: 5, correlativas: [13, 15, 18] },
+      { id: 25, nombre: "Psicología Educacional", anio: 5, correlativas: [13, 14, 17] },
+      { id: 26, nombre: "Psicoterapia I", anio: 5, correlativas: [13, 15, 18] },
+      { id: 27, nombre: "Psicoterapia II", anio: 5, correlativas: [25, 26] },
+      { id: 28, nombre: "Psicología Preventiva", anio: 5, correlativas: [15, 17, 18] },
+      { id: 29, nombre: "Clínica Niños y Adolescentes", anio: 6, correlativas: [20, 22, 23] },
+      { id: 30, nombre: "Clínica de Adultos y Gerontes", anio: 6, correlativas: [20, 22, 23] },
+      { id: 31, nombre: "Orientación Vocacional", anio: 6, correlativas: [24, 28] },
+      { id: 32, nombre: "Psicología Laboral", anio: 6, correlativas: [24, 28] },
+      { id: 33, nombre: "Psicología Forense", anio: 6, correlativas: [24, 28] }
+    ];
+
+    const contenedor = document.getElementById("contenedor");
+
+    function render() {
+      contenedor.innerHTML = "";
+      for (let anio = 1; anio <= 6; anio++) {
+        const bloque = document.createElement("div");
+        bloque.className = "anio";
+        bloque.innerHTML = `<h2>${anio}° Año</h2>`;
+        materias.filter(m => m.anio === anio).forEach(materia => {
+          const aprobadas = getAprobadas();
+          const puedeCursar = materia.correlativas.every(id => aprobadas.includes(id));
+          const checked = aprobadas.includes(materia.id);
+          const locked = !puedeCursar && !checked;
+          const div = document.createElement("div");
+          div.className = `materia${locked ? " locked" : ""}`;
+          div.innerHTML = `<input type="checkbox" id="mat${materia.id}" ${checked ? "checked" : ""} ${locked ? "disabled" : ""}>
+            <label for="mat${materia.id}">${materia.id}. ${materia.nombre}</label>`;
+          bloque.appendChild(div);
+        });
+        contenedor.appendChild(bloque);
+      }
+
+      document.querySelectorAll("input[type='checkbox']").forEach(cb => {
+        cb.addEventListener("change", e => {
+          const id = parseInt(e.target.id.replace("mat", ""));
+          const aprobadas = getAprobadas();
+          if (e.target.checked && !aprobadas.includes(id)) {
+            aprobadas.push(id);
+          } else if (!e.target.checked && aprobadas.includes(id)) {
+            const index = aprobadas.indexOf(id);
+            aprobadas.splice(index, 1);
+          }
+          localStorage.setItem("mallaPsicoUNLP", JSON.stringify(aprobadas));
+          render();
+        });
+      });
+    }
+
+    function getAprobadas() {
+      return JSON.parse(localStorage.getItem("mallaPsicoUNLP") || "[]");
+    }
+
+    function reiniciar() {
+      localStorage.removeItem("mallaPsicoUNLP");
+      render();
+    }
+
+    render();
+  </script>
+
+</body>
+</html>
