@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla interactiva Psicología UNLP (Plan 2012)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fafafa;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .materia {
+      display: inline-block;
+      padding: 10px 15px;
+      margin: 6px;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .materia.tachada {
+      background-color: #a5d6a7;
+      text-decoration: line-through;
+    }
+
+    .bloqueada {
+      background-color: #ccc !important;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Malla Interactiva - Psicología UNLP (Plan 2012)</h1>
+<p>Tocá una materia para marcarla como "final rendido". Se desbloquearán las siguientes si cumplís las correlativas.</p>
+
+<div id="malla">
+  <!-- Materias base -->
+  <div class="materia" data-id="psico1">Psicología I</div>
+  <div class="materia" data-id="sociedad">Psicología y Sociedad</div>
+  <div class="materia bloqueada" data-id="episteme" data-requiere="psico1">Epistemología</div>
+  <div class="materia bloqueada" data-id="psico2" data-requiere="psico1,episteme">Psicología II</div>
+  <div class="materia bloqueada" data-id="neuro" data-requiere="psico1">Neurofisiología</div>
+  <div class="materia bloqueada" data-id="metodologia" data-requiere="episteme">Metodología</div>
+  <!-- Podés seguir agregando más materias y correlativas -->
+</div>
+
+<script>
+  // Cargar estado desde localStorage
+  const materias = document.querySelectorAll('.materia');
+  const estado = JSON.parse(localStorage.getItem('estadoMalla')) || {};
+
+  function actualizarEstado() {
+    materias.forEach(m => {
+      const id = m.dataset.id;
+      if (estado[id]) {
+        m.classList.add('tachada');
+        m.classList.remove('bloqueada');
+      }
+    });
+
+    materias.forEach(m => {
+      if (!m.classList.contains('tachada') && m.dataset.requiere) {
+        const requisitos = m.dataset.requiere.split(',');
+        const habilitada = requisitos.every(req => estado[req]);
+        if (habilitada) {
+          m.classList.remove('bloqueada');
+        } else {
+          m.classList.add('bloqueada');
+        }
+      }
+    });
+
+    localStorage.setItem('estadoMalla', JSON.stringify(estado));
+  }
+
+  materias.forEach(m => {
+    m.addEventListener('click', () => {
+      const id = m.dataset.id;
+      if (m.classList.contains('bloqueada')) return;
+
+      if (estado[id]) {
+        delete estado[id];
+        m.classList.remove('tachada');
+      } else {
+        estado[id] = true;
+        m.classList.add('tachada');
+      }
+
+      actualizarEstado();
+    });
+  });
+
+  actualizarEstado();
+</script>
+
+</body>
+</html>
