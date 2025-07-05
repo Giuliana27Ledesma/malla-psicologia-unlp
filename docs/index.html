@@ -1,105 +1,201 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Malla interactiva Psicología UNLP (Plan 2012)</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fafafa;
-      padding: 2rem;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    .materia {
-      display: inline-block;
-      padding: 10px 15px;
-      margin: 6px;
-      background-color: #e0e0e0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .materia.tachada {
-      background-color: #a5d6a7;
-      text-decoration: line-through;
-    }
-
-    .bloqueada {
-      background-color: #ccc !important;
-      cursor: not-allowed;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Malla Interactiva Psicología UNLP Plan 2012</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #fafafa;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .anio {
+    margin-bottom: 2rem;
+  }
+  .anio h2 {
+    background: #34675c;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+  }
+  .materia {
+    display: inline-block;
+    margin: 6px 8px;
+    padding: 10px 14px;
+    background: #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s;
+  }
+  .materia.tachada {
+    background: #82c91e;
+    text-decoration: line-through;
+    color: #222;
+  }
+  .materia.bloqueada {
+    background: #bbb;
+    color: #666;
+    cursor: not-allowed;
+  }
+  #reset-btn {
+    display: block;
+    margin: 0 auto 2rem auto;
+    padding: 8px 14px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  #reset-btn:hover {
+    background: #b02a37;
+  }
+  p.info {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+</style>
 </head>
 <body>
 
-<h1>Malla Interactiva - Psicología UNLP (Plan 2012)</h1>
-<p>Tocá una materia para marcarla como "final rendido". Se desbloquearán las siguientes si cumplís las correlativas.</p>
+<h1>Malla Interactiva - Psicología UNLP Plan 2012</h1>
+<p class="info">Tocá las materias que rendiste para tacharlas y desbloquear las que podés cursar.</p>
+<button id="reset-btn">Reiniciar Progreso</button>
 
-<div id="malla">
-  <!-- Materias base -->
-  <div class="materia" data-id="psico1">Psicología I</div>
-  <div class="materia" data-id="sociedad">Psicología y Sociedad</div>
-  <div class="materia bloqueada" data-id="episteme" data-requiere="psico1">Epistemología</div>
-  <div class="materia bloqueada" data-id="psico2" data-requiere="psico1,episteme">Psicología II</div>
-  <div class="materia bloqueada" data-id="neuro" data-requiere="psico1">Neurofisiología</div>
-  <div class="materia bloqueada" data-id="metodologia" data-requiere="episteme">Metodología</div>
-  <!-- Podés seguir agregando más materias y correlativas -->
+<div id="malla-container">
+
+  <div class="anio" data-anio="1">
+    <h2>Primer Año</h2>
+    <div class="materia" data-id="psico1" data-requiere="">Psicología I</div>
+    <div class="materia" data-id="antropologia" data-requiere="">Antropología Cultural y Social</div>
+    <div class="materia" data-id="logica" data-requiere="">Lógica</div>
+    <div class="materia" data-id="intro_filosofia" data-requiere="">Introducción a la Filosofía</div>
+    <div class="materia" data-id="biologia_humana" data-requiere="">Biología Humana</div>
+  </div>
+
+  <div class="anio" data-anio="2">
+    <h2>Segundo Año</h2>
+    <div class="materia bloqueada" data-id="psico2" data-requiere="psico1">Psicología II</div>
+    <div class="materia bloqueada" data-id="teoria_psicoanalitica" data-requiere="psico1">Teoría Psicoanalítica</div>
+    <div class="materia bloqueada" data-id="sociologia_general" data-requiere="antropologia">Sociología General</div>
+    <div class="materia bloqueada" data-id="psicologia_genetica" data-requiere="psico1">Psicología Genética</div>
+    <div class="materia bloqueada" data-id="estadistica" data-requiere="logica">Estadística Aplicada a la Psicología</div>
+    <div class="materia bloqueada" data-id="linguistica" data-requiere="logica">Lingüística General</div>
+  </div>
+
+  <div class="anio" data-anio="3">
+    <h2>Tercer Año</h2>
+    <div class="materia bloqueada" data-id="neuroanatomia" data-requiere="biologia_humana">Neuroanatomía y Neurofisiología</div>
+    <div class="materia bloqueada" data-id="epistemologia_metodologia" data-requiere="psico1,logica,psico2,teoria_psicoanalitica">Epistemología y Metodología de la Investigación Psicológica</div>
+    <div class="materia bloqueada" data-id="exploracion_i" data-requiere="psico1">Fundamentos, Técnicas e Instrumentos de la Exploración Psicológica I</div>
+    <div class="materia bloqueada" data-id="corrientes_actuales" data-requiere="psico1,logica">Corrientes Actuales en Psicología</div>
+    <div class="materia bloqueada" data-id="psicologia_evolutiva_i" data-requiere="psico1,psicologia_genetica,teoria_psicoanalitica">Psicología Evolutiva I</div>
+    <div class="materia bloqueada" data-id="psicologia_evolutiva_ii" data-requiere="psicologia_evolutiva_i">Psicología Evolutiva II</div>
+    <div class="materia bloqueada" data-id="psicologia_social" data-requiere="psico2">Psicología Social</div>
+  </div>
+
+  <div class="anio" data-anio="4">
+    <h2>Cuarto Año</h2>
+    <div class="materia bloqueada" data-id="psicopatologia_i" data-requiere="">Psicopatología I</div>
+    <div class="materia bloqueada" data-id="psicologia_institucional" data-requiere="">Psicología Institucional</div>
+    <div class="materia bloqueada" data-id="seminario_experimental" data-requiere="">Seminario de Psicología Experimental</div>
+    <div class="materia bloqueada" data-id="psicopatologia_ii" data-requiere="">Psicopatología II</div>
+    <div class="materia bloqueada" data-id="exploracion_ii" data-requiere="">Fundamentos, Técnicas e Instrumentos de la Exploración Psicológica II</div>
+    <div class="materia bloqueada" data-id="seminario_optativo_4" data-requiere="">Seminario Optativo</div>
+    <div class="materia bloqueada" data-id="capacitacion_idioma" data-requiere="">Capacitación en Idioma</div>
+  </div>
+
+  <div class="anio" data-anio="5">
+    <h2>Quinto Año</h2>
+    <div class="materia bloqueada" data-id="psicodiagnostico" data-requiere="">Psicodiagnóstico</div>
+    <div class="materia bloqueada" data-id="psicologia_educacional" data-requiere="">Psicología Educacional</div>
+    <div class="materia bloqueada" data-id="psicoterapia_i" data-requiere="">Psicoterapia I</div>
+    <div class="materia bloqueada" data-id="psicoterapia_ii" data-requiere="">Psicoterapia II</div>
+    <div class="materia bloqueada" data-id="psicologia_preventiva" data-requiere="">Psicología Preventiva</div>
+    <div class="materia bloqueada" data-id="seminario_optativo_5" data-requiere="">Seminario Optativo</div>
+  </div>
+
+  <div class="anio" data-anio="6">
+    <h2>Sexto Año</h2>
+    <div class="materia bloqueada" data-id="psicologia_clinica_niños" data-requiere="">Psicología Clínica de Niños y Adolescentes</div>
+    <div class="materia bloqueada" data-id="psicologia_clinica_adultos" data-requiere="">Psicología Clínica de Adultos y Gerontes</div>
+    <div class="materia bloqueada" data-id="orientacion_vocacional" data-requiere="">Orientación Vocacional</div>
+    <div class="materia bloqueada" data-id="psicologia_laboral" data-requiere="">Psicología Laboral</div>
+    <div class="materia bloqueada" data-id="psicologia_forense" data-requiere="">Psicología Forense</div>
+    <div class="materia bloqueada" data-id="seminario_optativo_6" data-requiere="">Seminario Optativo</div>
+  </div>
+
 </div>
 
 <script>
-  // Cargar estado desde localStorage
   const materias = document.querySelectorAll('.materia');
-  const estado = JSON.parse(localStorage.getItem('estadoMalla')) || {};
 
-  function actualizarEstado() {
+  // Cargar progreso guardado
+  let estado = JSON.parse(localStorage.getItem('estadoMalla')) || {};
+
+  // Función para saber si una materia está desbloqueada según correlativas
+  function estaDesbloqueada(materia) {
+    const requiere = materia.dataset.requiere;
+    if (!requiere) return true; // sin correlativas, siempre desbloqueada
+
+    const requisitos = requiere.split(',').filter(r => r.trim() !== '');
+    return requisitos.every(req => estado[req]);
+  }
+
+  // Actualizar la visualización según estado y correlativas
+  function actualizarMalla() {
     materias.forEach(m => {
-      const id = m.dataset.id;
-      if (estado[id]) {
+      if (estado[m.dataset.id]) {
         m.classList.add('tachada');
         m.classList.remove('bloqueada');
-      }
-    });
-
-    materias.forEach(m => {
-      if (!m.classList.contains('tachada') && m.dataset.requiere) {
-        const requisitos = m.dataset.requiere.split(',');
-        const habilitada = requisitos.every(req => estado[req]);
-        if (habilitada) {
+      } else {
+        if (estaDesbloqueada(m)) {
           m.classList.remove('bloqueada');
         } else {
           m.classList.add('bloqueada');
+          m.classList.remove('tachada');
         }
       }
     });
-
-    localStorage.setItem('estadoMalla', JSON.stringify(estado));
   }
 
+  // Evento click para tachar/desactivar materia
   materias.forEach(m => {
     m.addEventListener('click', () => {
-      const id = m.dataset.id;
       if (m.classList.contains('bloqueada')) return;
-
+      const id = m.dataset.id;
       if (estado[id]) {
         delete estado[id];
-        m.classList.remove('tachada');
       } else {
         estado[id] = true;
-        m.classList.add('tachada');
       }
-
-      actualizarEstado();
+      actualizarMalla();
+      localStorage.setItem('estadoMalla', JSON.stringify(estado));
     });
   });
 
-  actualizarEstado();
+  // Botón para reiniciar progreso
+  const btnReset = document.getElementById('reset-btn');
+  btnReset.addEventListener('click', () => {
+    if (confirm('¿Querés reiniciar todo el progreso?')) {
+      estado = {};
+      actualizarMalla();
+      localStorage.removeItem('estadoMalla');
+    }
+  });
+
+  // Inicializar al cargar
+  actualizarMalla();
 </script>
 
 </body>
